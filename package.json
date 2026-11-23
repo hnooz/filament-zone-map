@@ -1,0 +1,18 @@
+{
+    "name": "filament-zone-map",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "node bin/build.js --dev",
+        "build": "node bin/build.js",
+        "test": "node --test resources/js/tests/*.test.js"
+    },
+    "dependencies": {
+        "terra-draw": "1.40.0",
+        "terra-draw-google-maps-adapter": "1.7.0"
+    },
+    "devDependencies": {
+        "@types/google.maps": "3.67.0",
+        "esbuild": "0.28.2"
+    }
+}
