@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hnooz\FilamentZoneMap\Widgets;
 
 use Filament\Widgets\Widget;
+use Hnooz\FilamentZoneMap\Exceptions\InvalidZoneData;
 use Hnooz\FilamentZoneMap\Support\JsLabels;
 use Hnooz\FilamentZoneMap\Support\MapSettings;
 use Hnooz\FilamentZoneMap\Support\ZoneState;
@@ -101,7 +102,11 @@ abstract class ZonesMapWidget extends Widget
         $groups = [];
 
         foreach ($records as $record) {
-            $zones = ZoneState::toDisplayArray($record->getAttribute($this->zonesColumn));
+            try {
+                $zones = ZoneState::toDisplayArray($record->getAttribute($this->zonesColumn));
+            } catch (InvalidZoneData) {
+                continue;
+            }
 
             if ($zones === null) {
                 continue;
