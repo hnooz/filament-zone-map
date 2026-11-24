@@ -1,12 +1,13 @@
 /**
  * Terra Draw setup for Google Maps: modes, per-zone colors and select-mode edit rules.
  *
- * All three drawing modes are always registered so stored zones of any shape render
+ * All drawing modes are always registered so stored zones of any shape render
  * and stay editable; the toolbar decides which shapes users can draw.
  */
 import {
     TerraDraw,
     TerraDrawCircleMode,
+    TerraDrawFreehandMode,
     TerraDrawPolygonMode,
     TerraDrawRectangleMode,
     TerraDrawSelectMode,
@@ -15,6 +16,9 @@ import { TerraDrawGoogleMapsAdapter } from 'terra-draw-google-maps-adapter'
 import { COORDINATE_PRECISION, createId } from './geojson.js'
 
 const MAX_ID_LENGTH = 64
+
+/** Freehand: pixels between captured points (fewer vertices) and light smoothing. */
+const FREEHAND_OPTIONS = { minDistance: 20, smoothing: 0.2, autoClose: true }
 
 /** Accept stored ids like "zone-1" or "7", not only UUIDs (Terra Draw's default). */
 const idStrategy = {
@@ -36,6 +40,8 @@ export function createDraw({ lib, map, color }) {
             polygon: { feature: { draggable: true, coordinates: { draggable: true, midpoints: true, deletable: true } } },
             rectangle: { feature: { draggable: true, coordinates: { resizable: 'opposite' } } },
             circle: { feature: { draggable: true, coordinates: { resizable: 'center-fixed' } } },
+            // Freehand zones have many points: move them as a whole instead of editing each point.
+            freehand: { feature: { draggable: true } },
         },
         styles: {
             selectedPolygonColor: fill,
@@ -58,6 +64,7 @@ export function createDraw({ lib, map, color }) {
             new TerraDrawPolygonMode({ styles: shapeStyles }),
             new TerraDrawRectangleMode({ styles: shapeStyles }),
             new TerraDrawCircleMode({ styles: shapeStyles }),
+            new TerraDrawFreehandMode({ ...FREEHAND_OPTIONS, styles: shapeStyles }),
             select,
         ],
         idStrategy,

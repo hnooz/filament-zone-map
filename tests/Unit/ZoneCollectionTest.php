@@ -25,6 +25,13 @@ it('round-trips without losing data', function (): void {
     expect(ZoneCollection::fromArray($payload)->toArray())->toBe($payload);
 });
 
+it('maps the freehand shape', function (): void {
+    $zones = ZoneCollection::fromArray(GeoJson::collection([GeoJson::feature(properties: ['shape' => 'freehand'])]));
+
+    expect($zones->all()[0]->shape)->toBe(ZoneShape::Freehand)
+        ->and($zones->toArray()['features'][0]['properties']['shape'])->toBe('freehand');
+});
+
 it('accepts a JSON string', function (): void {
     $json = json_encode(GeoJson::collection([GeoJson::feature()]), JSON_THROW_ON_ERROR);
 

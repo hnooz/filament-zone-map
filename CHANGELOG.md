@@ -2,6 +2,12 @@
 
 All notable changes to `filament-zone-map` will be documented in this file.
 
+## v1.1.0 - Unreleased
+
+- Freehand drawing: add `freehand` to `shapes()` to trace zones by hand (`ZoneShape::Freehand`)
+- Freehand zones can be selected, moved, named, recolored and deleted
+- The default toolbar is unchanged (polygon, rectangle, circle)
+
 ## v1.0.0 - 2026-11-24
 
 First release.

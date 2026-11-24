@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.07) 1px, transparent 0) 0 0 / 22px 22px,
+      linear-gradient(135deg, #fffbeb 0%, #f8fafc 45%, #eef2ff 100%);
+    position: relative;
+  }
+
+  /* Left copy */
+  .copy { position: absolute; left: 64px; top: 120px; width: 380px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 999px;
+    background: #fff; border: 1px solid #fde68a; color: #b45309;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .pill i { width: 8px; height: 8px; border-radius: 99px; background: #f59e0b; display: block; }
+  h1 { margin-top: 22px; font-size: 54px; line-height: 1.02; font-weight: 800; letter-spacing: -0.035em; }
+  h1 span { color: #d97706; }
+  .tag { margin-top: 18px; font-size: 19px; line-height: 1.5; color: #475569; }
+  ul { margin-top: 28px; list-style: none; display: grid; gap: 12px; }
+  li { display: flex; align-items: center; gap: 12px; font-size: 15.5px; color: #1e293b; font-weight: 500; }
+  li b { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: #fff; font-size: 12px; flex-shrink: 0; }
+  .code {
+    margin-top: 34px; display: inline-block;
+    padding: 11px 16px; border-radius: 10px;
+    background: #0f172a; color: #e2e8f0;
+    font-family: 'DejaVu Sans Mono', monospace; font-size: 13.5px;
+  }
+  .code em { color: #fbbf24; font-style: normal; }
+
+  /* Panel mockup */
+  .panel {
+    position: absolute; left: 470px; top: 52px; width: 770px; height: 700px;
+    background: #fff; border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 30px 60px -20px rgba(15,23,42,.25), 0 12px 24px -12px rgba(15,23,42,.12);
+    overflow: hidden;
+  }
+  .topbar { height: 48px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; padding: 0 22px; gap: 8px; }
+  .dot { width: 11px; height: 11px; border-radius: 99px; }
+  .crumbs { margin-left: 14px; font-size: 13px; color: #64748b; }
+  .crumbs strong { color: #0f172a; font-weight: 600; }
+  .content { padding: 22px 26px; }
+  .title-row { display: flex; align-items: center; justify-content: space-between; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .btn { padding: 8px 14px; border-radius: 9px; background: #f59e0b; color: #fff; font-size: 13px; font-weight: 600; }
+  .label { font-size: 13px; font-weight: 600; color: #334155; margin: 18px 0 7px; }
+  .label sup { color: #dc2626; }
+  .input { height: 38px; border: 1px solid #e2e8f0; border-radius: 9px; padding: 0 12px; display: flex; align-items: center; font-size: 14px; }
+  .toolbar { display: flex; gap: 6px; margin-bottom: 9px; }
+  .tool { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12.5px; color: #64748b; background: #fff; }
+  .tool svg { width: 15px; height: 15px; }
+  .tool.on { color: #d97706; border-color: #f59e0b; background: #fffbeb; }
+  .tool.danger { color: #dc2626; border-color: #fecaca; }
+  .spacer { flex: 1; }
+  .map { position: relative; height: 430px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+  .map svg.base { position: absolute; inset: 0; }
+
+  .editor {
+    position: absolute; top: 14px; left: 14px; width: 222px;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 12px; box-shadow: 0 8px 20px rgba(15,23,42,.14);
+  }
+  .editor p { font-size: 13px; font-weight: 700; }
+  .editor small { display: block; font-size: 11px; color: #64748b; margin: 10px 0 5px; }
+  .editor .input { height: 32px; font-size: 13px; }
+  .swatches { display: flex; gap: 5px; }
+  .sw { width: 19px; height: 19px; border-radius: 99px; flex-shrink: 0; }
+  .sw.on { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #f59e0b; }
+
+  .zoom { position: absolute; right: 12px; bottom: 12px; display: grid; background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+  .zoom div { width: 30px; height: 30px; display: grid; place-items: center; font-size: 18px; color: #475569; }
+  .zoom div + div { border-top: 1px solid #e2e8f0; }
+  .chip { position: absolute; right: 12px; top: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; color: #334155; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+</style>
+</head>
+<body>
+
+<div class="copy">
+  <span class="pill"><i></i>Filament v5 plugin</span>
+  <h1>Filament<br><span>Zone Map</span></h1>
+  <p class="tag">Draw, edit and display zones on Google&nbsp;Maps, right inside your Filament panels.</p>
+  <ul>
+    <li><b style="background:#E74C3C"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 6-3 11H7L4 9z"/></svg></b>Polygons, rectangles &amp; circles</li>
+    <li><b style="background:#3498DB"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/></svg></b>Name and color every zone</li>
+    <li><b style="background:#2ECC71"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></b>GeoJSON storage with validation</li>
+    <li><b style="background:#9B59B6"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/></svg></b>Form field, infolist entry &amp; widget</li>
+  </ul>
+  <div class="code">composer require <em>hnooz/filament-zone-map</em></div>
+</div>
+
+<div class="panel">
+  <div class="topbar">
+    <span class="dot" style="background:#fca5a5"></span>
+    <span class="dot" style="background:#fcd34d"></span>
+    <span class="dot" style="background:#86efac"></span>
+    <span class="crumbs">Delivery Areas &nbsp;›&nbsp; <strong>Edit</strong></span>
+  </div>
+
+  <div class="content">
+    <div class="title-row">
+      <h2>Edit Riyadh Central</h2>
+      <span class="btn">Save changes</span>
+    </div>
+
+    <div class="label">Name<sup>*</sup></div>
+    <div class="input">Riyadh Central</div>
+
+    <div class="label">Coverage zones<sup>*</sup></div>
+    <div class="toolbar">
+      <span class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 6-3 11H7L4 9z"/></svg>Polygon</span>
+      <span class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="1"/></svg>Rectangle</span>
+      <span class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>Circle</span>
+      <span class="tool on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3l14 8-6 2-2 6z"/></svg>Select</span>
+      <span class="spacer"></span>
+      <span class="tool danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Delete zone</span>
+      <span class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Clear all</span>
+    </div>
+
+    <div class="map">
+      <svg class="base" viewBox="0 0 718 430" width="718" height="430" xmlns="http://www.w3.org/2000/svg">
+        <rect width="718" height="430" fill="#f3f1ec"/>
+        <!-- parks and water -->
+        <path d="M0 330 C120 300 190 360 300 340 S520 280 718 320 L718 430 L0 430 Z" fill="#d6e8f7"/>
+        <path d="M0 348 C120 318 190 378 300 358 S520 298 718 338" fill="none" stroke="#c3dbf0" stroke-width="3"/>
+        <rect x="560" y="40" width="120" height="80" rx="10" fill="#dcebd3"/>
+        <ellipse cx="120" cy="250" rx="60" ry="34" fill="#dcebd3"/>
+        <rect x="380" y="200" width="70" height="50" rx="8" fill="#dcebd3"/>
+        <!-- blocks (minor roads) -->
+        <g stroke="#ffffff" stroke-width="5">
+          <path d="M0 60H718M0 120H718M0 180H718M0 240H718M0 290H718"/>
+          <path d="M70 0V430M150 0V430M230 0V430M310 0V430M390 0V430M470 0V430M550 0V430M630 0V430M700 0V430"/>
+        </g>
+        <!-- major roads -->
+        <g fill="none" stroke-linecap="round">
+          <path d="M-10 410 L330 150 L730 70" stroke="#e8e2d6" stroke-width="16"/>
+          <path d="M-10 410 L330 150 L730 70" stroke="#ffffff" stroke-width="11"/>
+          <path d="M260 -10 L300 440" stroke="#f1d58a" stroke-width="15"/>
+          <path d="M260 -10 L300 440" stroke="#fbe7a6" stroke-width="10"/>
+          <path d="M-10 150 H730" stroke="#e8e2d6" stroke-width="12"/>
+          <path d="M-10 150 H730" stroke="#ffffff" stroke-width="8"/>
+        </g>
+
+        <!-- zone: blue rectangle -->
+        <rect x="516" y="56" width="180" height="120" fill="#3498DB" fill-opacity="0.22" stroke="#3498DB" stroke-width="2.5"/>
+        <!-- zone: green circle -->
+        <circle cx="600" cy="282" r="66" fill="#2ECC71" fill-opacity="0.22" stroke="#2ECC71" stroke-width="2.5"/>
+        <!-- zone: selected red polygon -->
+        <path id="poly" d="M262 104 L422 84 L492 184 L442 304 L292 314 L227 214 Z" fill="#E74C3C" fill-opacity="0.34" stroke="#E74C3C" stroke-width="3.2" stroke-linejoin="round"/>
+        <!-- vertex handles -->
+        <g fill="#ffffff" stroke="#E74C3C" stroke-width="2.5"><circle cx="262" cy="104" r="6.5"/><circle cx="422" cy="84" r="6.5"/><circle cx="492" cy="184" r="6.5"/><circle cx="442" cy="304" r="6.5"/><circle cx="292" cy="314" r="6.5"/><circle cx="227" cy="214" r="6.5"/></g>
+        <!-- midpoints -->
+        <g fill="#E74C3C" fill-opacity="0.75"><circle cx="342.0" cy="94.0" r="4"/><circle cx="457.0" cy="134.0" r="4"/><circle cx="467.0" cy="244.0" r="4"/><circle cx="367.0" cy="309.0" r="4"/><circle cx="259.5" cy="264.0" r="4"/><circle cx="244.5" cy="159.0" r="4"/></g>
+        <!-- zone labels -->
+        <g font-family="Inter" font-size="12" font-weight="600">
+          <rect x="558" y="104" width="96" height="24" rx="12" fill="#fff" opacity="0.95"/>
+          <text x="606" y="120" text-anchor="middle" fill="#1d4ed8">East Business</text>
+          <rect x="559" y="270" width="82" height="24" rx="12" fill="#fff" opacity="0.95"/>
+          <text x="600" y="286" text-anchor="middle" fill="#15803d">Airport ring</text>
+        </g>
+      </svg>
+
+      <div class="editor">
+        <p>Selected zone</p>
+        <small>Zone name</small>
+        <div class="input">North district</div>
+        <small>Color</small>
+        <div class="swatches">
+          <span class="sw on" style="background:#E74C3C"></span>
+          <span class="sw" style="background:#E67E22"></span>
+          <span class="sw" style="background:#F1C40F"></span>
+          <span class="sw" style="background:#2ECC71"></span>
+          <span class="sw" style="background:#1ABC9C"></span>
+          <span class="sw" style="background:#3498DB"></span>
+          <span class="sw" style="background:#9B59B6"></span>
+          <span class="sw" style="background:#34495E"></span>
+        </div>
+      </div>
+
+      <span class="chip">3 zones</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ return [
         'polygon' => 'Polygon',
         'rectangle' => 'Rectangle',
         'circle' => 'Circle',
+        'freehand' => 'Freehand',
         'select' => 'Select',
     ],
 

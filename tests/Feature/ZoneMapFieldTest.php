@@ -23,6 +23,16 @@ it('renders the map, toolbar and config', function (): void {
         ->assertSeeHtml('wire:ignore');
 });
 
+it('shows the freehand tool only when enabled', function (): void {
+    livewire(ZoneFormPage::class)->assertDontSeeHtml('title="Freehand"');
+
+    ZoneFormPage::$configureField = fn (ZoneMap $field): ZoneMap => $field->shapes(['polygon', 'freehand']);
+
+    livewire(ZoneFormPage::class)
+        ->assertSeeHtml('title="Freehand"')
+        ->assertDontSeeHtml('title="Circle"');
+});
+
 it('hides the toolbar and editor when disabled', function (): void {
     ZoneFormPage::$configureField = fn (ZoneMap $field): ZoneMap => $field->editableZones()->disabled();
 

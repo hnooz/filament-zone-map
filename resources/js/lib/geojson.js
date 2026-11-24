@@ -2,7 +2,7 @@
  * Converts between the package data contract (see INSTRUCTIONS.md) and Terra Draw features.
  * Pure functions: no DOM, no Google Maps.
  */
-export const SHAPES = ['polygon', 'rectangle', 'circle']
+export const SHAPES = ['polygon', 'rectangle', 'circle', 'freehand']
 export const COORDINATE_PRECISION = 7
 
 const EARTH_RADIUS_M = 6371008.8

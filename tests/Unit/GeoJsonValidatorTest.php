@@ -13,6 +13,7 @@ it('accepts valid payloads', function (array $payload): void {
     'polygon' => fn () => GeoJson::collection([GeoJson::feature()]),
     'circle' => fn () => GeoJson::collection([GeoJson::circle()]),
     'rectangle' => fn () => GeoJson::collection([GeoJson::feature(properties: ['shape' => 'rectangle'])]),
+    'freehand' => fn () => GeoJson::collection([GeoJson::feature(properties: ['shape' => 'freehand'])]),
     'no id / no properties' => fn () => GeoJson::collection([['type' => 'Feature', 'geometry' => ['type' => 'Polygon', 'coordinates' => GeoJson::squareRings()]]]),
     'null name and color' => fn () => GeoJson::collection([GeoJson::feature(properties: ['name' => null, 'color' => null])]),
     'integer coordinates' => fn () => GeoJson::withGeometry([[[46, 24], [47, 24], [47, 25], [46, 24]]]),

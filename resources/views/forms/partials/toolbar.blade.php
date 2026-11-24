@@ -3,6 +3,7 @@
         'polygon' => '<path d="M12 3l8 6-3 11H7L4 9z" />',
         'rectangle' => '<rect x="4" y="6" width="16" height="12" rx="1" />',
         'circle' => '<circle cx="12" cy="12" r="8" />',
+        'freehand' => '<path d="M4 15c2-6 5-8 7-5s3 6 6 2 2-6 3-6" stroke-linecap="round" />',
         'select' => '<path d="M5 3l14 8-6 2-2 6z" />',
     ];
 @endphp

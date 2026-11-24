@@ -16,6 +16,12 @@ it('defaults to all shapes and config limits', function (): void {
         ->and($field->getHeight())->toBe('480px');
 });
 
+it('offers freehand only when opted in', function (): void {
+    expect(ZoneMap::make('coverage')->getShapes())->not->toContain('freehand')
+        ->and(ZoneMap::make('coverage')->shapes(['freehand', 'polygon'])->getShapes())->toBe(['polygon', 'freehand'])
+        ->and(ZoneMap::make('coverage')->shapes([ZoneShape::Freehand])->getShapes())->toBe(['freehand']);
+});
+
 it('accepts shape enums, keeps canonical order and drops unknown shapes', function (): void {
     $field = ZoneMap::make('coverage')->shapes([ZoneShape::Circle, 'polygon', 'hexagon']);
 

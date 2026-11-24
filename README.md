@@ -11,7 +11,7 @@ Draw, edit and display geographic **zones** on Google Maps in Filament: delivery
 
 ## Features
 
-- **Form field:** draw polygons, rectangles and circles; drag, reshape and delete zones
+- **Form field:** draw polygons, rectangles, circles and freehand shapes; drag, reshape and delete zones
 - **Zone editor:** name each zone and pick its color from your palette
 - **Infolist entry:** read-only map with zone names on click
 - **Dashboard widget:** zones of many records on one map, linked to each record
@@ -98,7 +98,7 @@ ZoneMap::make('coverage')
 
 | Method | Default | Description |
 |---|---|---|
-| `shapes(array)` | all | Shapes users can draw: `polygon`, `rectangle`, `circle` (or `ZoneShape` enums) |
+| `shapes(array)` | polygon, rectangle, circle | Shapes users can draw: `polygon`, `rectangle`, `circle`, `freehand` (or `ZoneShape` enums) |
 | `multiple(bool)` | `true` | `false` limits the field to one zone |
 | `maxZones(?int)` | config (`10`) | Maximum number of zones |
 | `maxVertices(?int)` | config (`500`) | Maximum points per zone |
@@ -110,6 +110,16 @@ ZoneMap::make('coverage')
 | `mapId(?string)` / `styles(?array $light, ?array $dark)` | config | Map styling (see below) |
 
 All methods accept closures. `required()` also fails when the field has no zones. `disabled()` shows the zones without the toolbar.
+
+### Freehand drawing
+
+Freehand is opt-in. Add it to the shapes:
+
+```php
+ZoneMap::make('coverage')->shapes(['polygon', 'freehand']);
+```
+
+Click once to start, move the pointer to trace the area, and click again to finish (it also closes when you return to the start point). Freehand zones can be selected, moved, named, recolored and deleted; to change the outline, draw it again. Freehand shapes have many points, so keep `maxVertices` high enough (the default is 500).
 
 ## Infolist entry
 

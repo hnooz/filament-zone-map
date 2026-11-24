@@ -66,6 +66,10 @@ describe('toTerraDrawFeature', () => {
         assert.match(toTerraDrawFeature(feature({}, { id: undefined })).id, /^[0-9a-f-]{36}$/)
     })
 
+    it('maps freehand zones to Terra Draw freehand mode', () => {
+        assert.equal(toTerraDrawFeature(feature({ shape: 'freehand' })).properties.mode, 'freehand')
+    })
+
     it('defaults unknown shapes to polygon and sets radiusKilometers for circles', () => {
         assert.equal(toTerraDrawFeature(feature({ shape: 'hexagon' })).properties.mode, 'polygon')
         assert.equal(toTerraDrawFeature(feature({ shape: 'circle', radius_m: 1500 })).properties.radiusKilometers, 1.5)
@@ -84,11 +88,16 @@ describe('fromTerraDraw', () => {
         assert.deepEqual(Object.keys(result.features[0].properties), ['shape', 'name', 'color', 'radius_m'])
     })
 
+    it('keeps freehand zones with a null radius', () => {
+        const result = fromTerraDraw([terra({ mode: 'freehand', name: 'Old town' })])
+        assert.deepEqual(result.features[0].properties, { shape: 'freehand', name: 'Old town', color: null, radius_m: null })
+    })
+
     it('drops guidance points, in-progress drawings and unknown modes', () => {
         const snapshot = [
             terra({ mode: 'select', selectionPoint: true }, { type: 'Point', coordinates: [46.6, 24.7] }),
             terra({ mode: 'polygon', currentlyDrawing: true }),
-            terra({ mode: 'freehand' }),
+            terra({ mode: 'sector' }),
         ]
         assert.equal(fromTerraDraw(snapshot).features.length, 0)
     })

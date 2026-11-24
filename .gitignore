@@ -4,6 +4,10 @@
 /coverage
 .phpunit.cache
 .phpunit.result.cache
+phpunit.xml
+phpstan.neon
+.claude/settings.local.json
+npm-debug.log*
 composer.lock
 package-lock.json
 .env

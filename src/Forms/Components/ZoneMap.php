@@ -47,7 +47,8 @@ final class ZoneMap extends Field
     }
 
     /**
-     * Shapes users can draw. Stored zones of other shapes still render and stay editable.
+     * Shapes users can draw (default: polygon, rectangle, circle; add `freehand` to opt in).
+     * Stored zones of other shapes still render and stay editable.
      *
      * @param  list<string|ZoneShape>|Closure  $shapes
      */
@@ -65,7 +66,7 @@ final class ZoneMap extends Field
      */
     public function getShapes(): array
     {
-        $shapes = $this->evaluate($this->shapes) ?? ZoneShape::values();
+        $shapes = $this->evaluate($this->shapes) ?? ZoneShape::defaults();
         $values = array_map(
             static fn (mixed $shape): mixed => $shape instanceof ZoneShape ? $shape->value : $shape,
             is_array($shapes) ? $shapes : [],
