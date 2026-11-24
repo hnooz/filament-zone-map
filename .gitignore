@@ -9,7 +9,6 @@ phpstan.neon
 .claude/settings.local.json
 npm-debug.log*
 composer.lock
-package-lock.json
 .env
 .DS_Store
 .idea
