@@ -11,7 +11,7 @@ Draw, edit and display geographic **zones** on Google Maps in Filament: delivery
 
 ## Features
 
-- **Form field:** draw polygons, rectangles, circles and freehand shapes; drag, reshape and delete zones
+- **Form field:** draw polygons, rectangles, circles and freehand shapes (opt-in); drag, reshape and delete zones
 - **Zone editor:** name each zone and pick its color from your palette
 - **Infolist entry:** read-only map with zone names on click
 - **Dashboard widget:** zones of many records on one map, linked to each record
@@ -210,7 +210,7 @@ Zones are stored as a GeoJSON `FeatureCollection`. Every shape is a `Polygon`; c
 }
 ```
 
-`radius_m` is set for circles only. A record without zones is stored as `NULL`.
+`shape` is one of `polygon`, `rectangle`, `circle` or `freehand`. `radius_m` is set for circles only. A record without zones is stored as `NULL`.
 
 ## Working with zones in PHP
 
